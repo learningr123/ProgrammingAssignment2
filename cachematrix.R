@@ -1,15 +1,36 @@
-## Put comments here that give an overall description of what your
-## functions do
+##This first fxn will take a matrix argument and store it, allowing for further manipulation later.
+makeCacheMatrix <- function(mat1 = matrix()) {
+ 
+  inv <- NULL
+  set <- function(matrix) {
+    mat1 <<- matrix
+    inv <<- NULL
+  }
 
-## Write a short comment describing this function
-
-makeCacheMatrix <- function(x = matrix()) {
-
+  get <- function() mat1
+  
+  set.inverse <- function(setinv) inv <<- setinv
+  
+  get.inverse <- function() inv
+  
+  list(set = set, get = get,
+       set.inverse = set.inverse,
+       get.inverse = get.inverse)
 }
 
-
-## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+##The second fxn takes the first fxn's manipulation of the original matrix and returns the inverse, storing it if it has not been calculated yet, and drawing on that stored value if it has been. 
+cacheSolve <- function(cachematrix, ...) {
+  
+  inv <- cachematrix$get.inverse()
+ 
+  if(!is.null(inv)) {
+    message("getting cached inverse")
+    return(inv)
+  }
+ 
+  matrix2 <- cachematrix$get()
+  inv <- solve(matrix2, ...)
+  cachematrix$set.inverse(inv)
+  
+  inv
 }
